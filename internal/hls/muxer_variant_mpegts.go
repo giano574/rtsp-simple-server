@@ -47,6 +47,6 @@ func (v *muxerVariantMPEGTS) writeAAC(now time.Time, pts time.Duration, au []byt
 	return v.segmenter.writeAAC(now, pts, au)
 }
 
-func (v *muxerVariantMPEGTS) file(name string, msn string, part string, skip string) *MuxerFileResponse {
-	return v.playlist.file(name)
+func (v *muxerVariantMPEGTS) file(name string, msn string, part string, skip string, created time.Time) *MuxerFileResponse {
+	return v.playlist.file(name, created)
 }

@@ -160,10 +160,10 @@ func (p *muxerVariantFMP4Playlist) hasPart(segmentID uint64, partID uint64) bool
 	return true
 }
 
-func (p *muxerVariantFMP4Playlist) file(name string, msn string, part string, skip string) *MuxerFileResponse {
+func (p *muxerVariantFMP4Playlist) file(name string, msn string, part string, skip string, created time.Time) *MuxerFileResponse {
 	switch {
 	case name == "stream.m3u8":
-		return p.playlistReader(msn, part, skip)
+		return p.playlistReader(msn, part, skip, created)
 
 	case strings.HasSuffix(name, ".mp4"):
 		return p.segmentReader(name)
@@ -173,7 +173,7 @@ func (p *muxerVariantFMP4Playlist) file(name string, msn string, part string, sk
 	}
 }
 
-func (p *muxerVariantFMP4Playlist) playlistReader(msn string, part string, skip string) *MuxerFileResponse {
+func (p *muxerVariantFMP4Playlist) playlistReader(msn string, part string, skip string, created time.Time) *MuxerFileResponse {
 	isDeltaUpdate := false
 
 	if p.lowLatency {
@@ -223,7 +223,7 @@ func (p *muxerVariantFMP4Playlist) playlistReader(msn string, part string, skip 
 				Header: map[string]string{
 					"Content-Type": `audio/mpegURL`,
 				},
-				Body: p.fullPlaylist(isDeltaUpdate),
+				Body: p.fullPlaylist(isDeltaUpdate, created),
 			}
 		}
 
@@ -249,14 +249,14 @@ func (p *muxerVariantFMP4Playlist) playlistReader(msn string, part string, skip 
 		Header: map[string]string{
 			"Content-Type": `audio/mpegURL`,
 		},
-		Body: p.fullPlaylist(isDeltaUpdate),
+		Body: p.fullPlaylist(isDeltaUpdate, created),
 	}
 }
 
-func (p *muxerVariantFMP4Playlist) fullPlaylist(isDeltaUpdate bool) io.Reader {
+func (p *muxerVariantFMP4Playlist) fullPlaylist(isDeltaUpdate bool, created time.Time) io.Reader {
 	cnt := "#EXTM3U\n"
 	cnt += "#EXT-X-VERSION:9\n"
-
+	cnt += "#EXT-X-PROGRAM-DATE-TIME:" + created.Format("2006-01-02T15:04:05.999Z07:00") + "\n"
 	targetDuration := targetDuration(p.segments)
 	cnt += "#EXT-X-TARGETDURATION:" + strconv.FormatUint(uint64(targetDuration), 10) + "\n"
 

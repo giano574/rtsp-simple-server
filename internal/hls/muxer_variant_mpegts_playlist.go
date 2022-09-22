@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 )
 
 type muxerVariantMPEGTSPlaylist struct {
@@ -41,10 +42,10 @@ func (p *muxerVariantMPEGTSPlaylist) close() {
 	p.cond.Broadcast()
 }
 
-func (p *muxerVariantMPEGTSPlaylist) file(name string) *MuxerFileResponse {
+func (p *muxerVariantMPEGTSPlaylist) file(name string, created time.Time) *MuxerFileResponse {
 	switch {
 	case name == "stream.m3u8":
-		return p.playlistReader()
+		return p.playlistReader(created)
 
 	case strings.HasSuffix(name, ".ts"):
 		return p.segmentReader(name)
@@ -54,9 +55,10 @@ func (p *muxerVariantMPEGTSPlaylist) file(name string) *MuxerFileResponse {
 	}
 }
 
-func (p *muxerVariantMPEGTSPlaylist) playlist() io.Reader {
+func (p *muxerVariantMPEGTSPlaylist) playlist(created time.Time) io.Reader {
 	cnt := "#EXTM3U\n"
 	cnt += "#EXT-X-VERSION:3\n"
+	cnt += "#EXT-X-PROGRAM-DATE-TIME:" + created.Format("2006-01-02T15:04:05.999Z07:00") + "\n"
 	cnt += "#EXT-X-ALLOW-CACHE:NO\n"
 
 	targetDuration := func() uint {
@@ -86,7 +88,7 @@ func (p *muxerVariantMPEGTSPlaylist) playlist() io.Reader {
 	return bytes.NewReader([]byte(cnt))
 }
 
-func (p *muxerVariantMPEGTSPlaylist) playlistReader() *MuxerFileResponse {
+func (p *muxerVariantMPEGTSPlaylist) playlistReader(created time.Time) *MuxerFileResponse {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
@@ -103,7 +105,7 @@ func (p *muxerVariantMPEGTSPlaylist) playlistReader() *MuxerFileResponse {
 		Header: map[string]string{
 			"Content-Type": `audio/mpegURL`,
 		},
-		Body: p.playlist(),
+		Body: p.playlist(created),
 	}
 }
 

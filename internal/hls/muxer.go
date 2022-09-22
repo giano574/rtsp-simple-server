@@ -86,10 +86,10 @@ func (m *Muxer) WriteAAC(now time.Time, pts time.Duration, au []byte) error {
 }
 
 // File returns a file reader.
-func (m *Muxer) File(name string, msn string, part string, skip string) *MuxerFileResponse {
+func (m *Muxer) File(name string, msn string, part string, skip string, created time.Time) *MuxerFileResponse {
 	if name == "index.m3u8" {
 		return m.primaryPlaylist.file()
 	}
 
-	return m.variant.file(name, msn, part, skip)
+	return m.variant.file(name, msn, part, skip, created)
 }

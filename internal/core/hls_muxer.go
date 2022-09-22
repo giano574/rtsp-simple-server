@@ -468,7 +468,8 @@ func (m *hlsMuxer) handleRequest(req *hlsMuxerRequest) func() *hls.MuxerFileResp
 			req.file,
 			req.ctx.Query("_HLS_msn"),
 			req.ctx.Query("_HLS_part"),
-			req.ctx.Query("_HLS_skip"))
+			req.ctx.Query("_HLS_skip"),
+			m.created)
 	}
 }
 

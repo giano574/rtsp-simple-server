@@ -127,7 +127,7 @@ func TestMuxerVideoAudio(t *testing.T) {
 			})
 			require.NoError(t, err)
 
-			byts, err := ioutil.ReadAll(m.File("index.m3u8", "", "", "").Body)
+			byts, err := ioutil.ReadAll(m.File("index.m3u8", "", "", "", time.Now()).Body)
 			require.NoError(t, err)
 
 			if ca == "mpegts" {
@@ -146,7 +146,7 @@ func TestMuxerVideoAudio(t *testing.T) {
 					"stream.m3u8\n", string(byts))
 			}
 
-			byts, err = ioutil.ReadAll(m.File("stream.m3u8", "", "", "").Body)
+			byts, err = ioutil.ReadAll(m.File("stream.m3u8", "", "", "", time.Now()).Body)
 			require.NoError(t, err)
 
 			var ma []string
@@ -182,7 +182,7 @@ func TestMuxerVideoAudio(t *testing.T) {
 			require.NotEqual(t, 0, len(ma))
 
 			if ca == "mpegts" {
-				dem := astits.NewDemuxer(context.Background(), m.File(ma[2], "", "", "").Body,
+				dem := astits.NewDemuxer(context.Background(), m.File(ma[2], "", "", "", time.Now()).Body,
 					astits.DemuxerOptPacketSize(188))
 
 				// PMT
@@ -270,7 +270,7 @@ func TestMuxerVideoAudio(t *testing.T) {
 					},
 				}, pkt)
 			} else {
-				byts, err := io.ReadAll(m.File("init.mp4", "", "", "").Body)
+				byts, err := io.ReadAll(m.File("init.mp4", "", "", "", time.Now()).Body)
 				require.NoError(t, err)
 
 				boxes := []gomp4.BoxPath{
@@ -393,7 +393,7 @@ func TestMuxerVideoAudio(t *testing.T) {
 				}
 				testMP4(t, byts, boxes)
 
-				byts, err = io.ReadAll(m.File(ma[2], "", "", "").Body)
+				byts, err = io.ReadAll(m.File(ma[2], "", "", "", time.Now()).Body)
 				require.NoError(t, err)
 
 				boxes = []gomp4.BoxPath{
@@ -461,7 +461,7 @@ func TestMuxerVideoOnly(t *testing.T) {
 			})
 			require.NoError(t, err)
 
-			byts, err := ioutil.ReadAll(m.File("index.m3u8", "", "", "").Body)
+			byts, err := ioutil.ReadAll(m.File("index.m3u8", "", "", "", time.Now()).Body)
 			require.NoError(t, err)
 
 			if ca == "mpegts" {
@@ -480,7 +480,7 @@ func TestMuxerVideoOnly(t *testing.T) {
 					"stream.m3u8\n", string(byts))
 			}
 
-			byts, err = ioutil.ReadAll(m.File("stream.m3u8", "", "", "").Body)
+			byts, err = ioutil.ReadAll(m.File("stream.m3u8", "", "", "", time.Now()).Body)
 			require.NoError(t, err)
 
 			var ma []string
@@ -516,7 +516,7 @@ func TestMuxerVideoOnly(t *testing.T) {
 			require.NotEqual(t, 0, len(ma))
 
 			if ca == "mpegts" { //nolint:dupl
-				dem := astits.NewDemuxer(context.Background(), m.File(ma[2], "", "", "").Body,
+				dem := astits.NewDemuxer(context.Background(), m.File(ma[2], "", "", "", time.Now()).Body,
 					astits.DemuxerOptPacketSize(188))
 
 				// PMT
@@ -551,7 +551,7 @@ func TestMuxerVideoOnly(t *testing.T) {
 					}, bytes.Repeat([]byte{0xff}, 162)...),
 				}, pkt)
 			} else { //nolint:dupl
-				byts, err := io.ReadAll(m.File("init.mp4", "", "", "").Body)
+				byts, err := io.ReadAll(m.File("init.mp4", "", "", "", time.Now()).Body)
 				require.NoError(t, err)
 
 				boxes := []gomp4.BoxPath{
@@ -621,7 +621,7 @@ func TestMuxerVideoOnly(t *testing.T) {
 				}
 				testMP4(t, byts, boxes)
 
-				byts, err = io.ReadAll(m.File(ma[2], "", "", "").Body)
+				byts, err = io.ReadAll(m.File(ma[2], "", "", "", time.Now()).Body)
 				require.NoError(t, err)
 
 				boxes = []gomp4.BoxPath{
@@ -688,7 +688,7 @@ func TestMuxerAudioOnly(t *testing.T) {
 			})
 			require.NoError(t, err)
 
-			byts, err := ioutil.ReadAll(m.File("index.m3u8", "", "", "").Body)
+			byts, err := ioutil.ReadAll(m.File("index.m3u8", "", "", "", time.Now()).Body)
 			require.NoError(t, err)
 
 			if ca == "mpegts" {
@@ -707,7 +707,7 @@ func TestMuxerAudioOnly(t *testing.T) {
 					"stream.m3u8\n", string(byts))
 			}
 
-			byts, err = ioutil.ReadAll(m.File("stream.m3u8", "", "", "").Body)
+			byts, err = ioutil.ReadAll(m.File("stream.m3u8", "", "", "", time.Now()).Body)
 			require.NoError(t, err)
 
 			var ma []string
@@ -740,7 +740,7 @@ func TestMuxerAudioOnly(t *testing.T) {
 			require.NotEqual(t, 0, len(ma))
 
 			if ca == "mpegts" { //nolint:dupl
-				dem := astits.NewDemuxer(context.Background(), m.File(ma[2], "", "", "").Body,
+				dem := astits.NewDemuxer(context.Background(), m.File(ma[2], "", "", "", time.Now()).Body,
 					astits.DemuxerOptPacketSize(188))
 
 				// PMT
@@ -775,7 +775,7 @@ func TestMuxerAudioOnly(t *testing.T) {
 					}, bytes.Repeat([]byte{0xff}, 162)...),
 				}, pkt)
 			} else { //nolint:dupl
-				byts, err := io.ReadAll(m.File("init.mp4", "", "", "").Body)
+				byts, err := io.ReadAll(m.File("init.mp4", "", "", "", time.Now()).Body)
 				require.NoError(t, err)
 
 				boxes := []gomp4.BoxPath{
@@ -845,7 +845,7 @@ func TestMuxerAudioOnly(t *testing.T) {
 				}
 				testMP4(t, byts, boxes)
 
-				byts, err = io.ReadAll(m.File(ma[2], "", "", "").Body)
+				byts, err = io.ReadAll(m.File(ma[2], "", "", "", time.Now()).Body)
 				require.NoError(t, err)
 
 				boxes = []gomp4.BoxPath{
@@ -883,7 +883,7 @@ func TestMuxerCloseBeforeFirstSegmentReader(t *testing.T) {
 
 	m.Close()
 
-	b := m.File("stream.m3u8", "", "", "").Body
+	b := m.File("stream.m3u8", "", "", "", time.Now()).Body
 	require.Equal(t, nil, b)
 }
 
@@ -929,7 +929,7 @@ func TestMuxerDoubleRead(t *testing.T) {
 	})
 	require.NoError(t, err)
 
-	byts, err := ioutil.ReadAll(m.File("stream.m3u8", "", "", "").Body)
+	byts, err := ioutil.ReadAll(m.File("stream.m3u8", "", "", "", time.Now()).Body)
 	require.NoError(t, err)
 
 	re := regexp.MustCompile(`^#EXTM3U\n` +
@@ -944,10 +944,10 @@ func TestMuxerDoubleRead(t *testing.T) {
 	ma := re.FindStringSubmatch(string(byts))
 	require.NotEqual(t, 0, len(ma))
 
-	byts1, err := ioutil.ReadAll(m.File(ma[2], "", "", "").Body)
+	byts1, err := ioutil.ReadAll(m.File(ma[2], "", "", "", time.Now()).Body)
 	require.NoError(t, err)
 
-	byts2, err := ioutil.ReadAll(m.File(ma[2], "", "", "").Body)
+	byts2, err := ioutil.ReadAll(m.File(ma[2], "", "", "", time.Now()).Body)
 	require.NoError(t, err)
 	require.Equal(t, byts1, byts2)
 }

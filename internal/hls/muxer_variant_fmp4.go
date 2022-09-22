@@ -71,7 +71,7 @@ func (v *muxerVariantFMP4) writeAAC(now time.Time, pts time.Duration, au []byte)
 	return v.segmenter.writeAAC(now, pts, au)
 }
 
-func (v *muxerVariantFMP4) file(name string, msn string, part string, skip string) *MuxerFileResponse {
+func (v *muxerVariantFMP4) file(name string, msn string, part string, skip string, created time.Time) *MuxerFileResponse {
 	if name == "init.mp4" {
 		v.mutex.Lock()
 		defer v.mutex.Unlock()
@@ -104,5 +104,5 @@ func (v *muxerVariantFMP4) file(name string, msn string, part string, skip strin
 		}
 	}
 
-	return v.playlist.file(name, msn, part, skip)
+	return v.playlist.file(name, msn, part, skip, created)
 }
